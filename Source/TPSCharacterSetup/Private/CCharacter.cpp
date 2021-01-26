@@ -60,15 +60,14 @@ void ACCharacter::Tick(float DeltaTime)
 void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACCharacter::MoveRight);
 
-	PlayerInputComponent->BindAxis("Up", this,&ACCharacter::AddControllerPitchInput);	// Bu fonksiyon Pawn class ýndan geliyor.
+	PlayerInputComponent->BindAxis("Up", this, &ACCharacter::AddControllerPitchInput);	// Bu fonksiyon Pawn class ýndan geliyor.
 	PlayerInputComponent->BindAxis("Turn", this, &ACCharacter::AddControllerYawInput);// Bu fonksiyon Pawn class ýndan geliyor.
 
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ACCharacter::StartCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACCharacter::EndCrouch);
-	
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACCharacter::Jump);
 }
-
