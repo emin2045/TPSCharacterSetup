@@ -18,6 +18,16 @@ void ACCharacter::BeginPlay()
 	
 }
 
+void ACCharacter::MoveForward(float Value)
+{
+	AddMovementInput(GetActorForwardVector() * Value);
+}
+
+void ACCharacter::MoveRight(float Value)
+{
+	AddMovementInput(GetActorRightVector() * Value);
+}
+
 // Called every frame
 void ACCharacter::Tick(float DeltaTime)
 {
@@ -29,6 +39,12 @@ void ACCharacter::Tick(float DeltaTime)
 void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	
+	PlayerInputComponent->BindAxis("MoveForward", this, &ACCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ACCharacter::MoveRight);
 
+	PlayerInputComponent->BindAxis("Up", this,&ACCharacter::AddControllerPitchInput);	// Bu fonksiyon Pawn class ýndan geliyor.
+	PlayerInputComponent->BindAxis("Turn", this, &ACCharacter::AddControllerYawInput);// Bu fonksiyon Pawn class ýndan geliyor.
+	
 }
 
