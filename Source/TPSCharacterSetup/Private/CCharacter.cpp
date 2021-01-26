@@ -4,6 +4,7 @@
 #include "CCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ACCharacter::ACCharacter()
@@ -17,7 +18,8 @@ ACCharacter::ACCharacter()
 	
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
-	
+
+	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +39,16 @@ void ACCharacter::MoveRight(float Value)
 	AddMovementInput(GetActorRightVector() * Value);
 }
 
+void ACCharacter::StartCrouch()
+{
+	Crouch();
+}
+
+void ACCharacter::EndCrouch()
+{
+	UnCrouch();
+}
+
 // Called every frame
 void ACCharacter::Tick(float DeltaTime)
 {
@@ -54,6 +66,9 @@ void ACCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("Up", this,&ACCharacter::AddControllerPitchInput);	// Bu fonksiyon Pawn class ýndan geliyor.
 	PlayerInputComponent->BindAxis("Turn", this, &ACCharacter::AddControllerYawInput);// Bu fonksiyon Pawn class ýndan geliyor.
+
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ACCharacter::StartCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACCharacter::EndCrouch);
 	
 }
 
