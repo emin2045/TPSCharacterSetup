@@ -3,11 +3,12 @@
 
 #include "CWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ACWeapon::ACWeapon()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
@@ -19,7 +20,35 @@ ACWeapon::ACWeapon()
 void ACWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+}
+
+void ACWeapon::Fire()
+{
+	AActor* WeaponUser = GetOwner();
+
+	if (WeaponUser)
+	{
+		FHitResult HitResult;
+		FVector EyesLocation;
+		FRotator EyesRotation;
+		WeaponUser->GetActorEyesViewPoint(EyesLocation, EyesRotation); // EyesLocation and EyesRotation have been set.
+
+		FVector TraceEnd = EyesLocation + (EyesRotation.Vector() * 4000);
+
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(WeaponUser);
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.bTraceComplex = true;
+
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, EyesLocation, TraceEnd, ECC_Visibility, QueryParams))	// return bool (LineTraceFunction)
+		{
+
+		}
+
+		DrawDebugLine(GetWorld(), EyesLocation, TraceEnd, FColor::Blue, false, 3, 0, 1);
+
+	}
 }
 
 // Called every frame
