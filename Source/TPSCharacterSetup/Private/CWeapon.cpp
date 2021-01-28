@@ -4,6 +4,7 @@
 #include "CWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ACWeapon::ACWeapon()
@@ -34,6 +35,7 @@ void ACWeapon::Fire()
 		FRotator EyesRotation;
 		WeaponUser->GetActorEyesViewPoint(EyesLocation, EyesRotation); // EyesLocation and EyesRotation have been set.
 
+		FVector HitDirection = EyesRotation.Vector();
 		FVector TraceEnd = EyesLocation + (EyesRotation.Vector() * 4000);
 
 		FCollisionQueryParams QueryParams;
@@ -43,6 +45,8 @@ void ACWeapon::Fire()
 
 		if (GetWorld()->LineTraceSingleByChannel(HitResult, EyesLocation, TraceEnd, ECC_Visibility, QueryParams))	// return bool (LineTraceFunction)
 		{
+			AActor* ShootedActor = HitResult.GetActor();
+			UGameplayStatics::ApplyPointDamage(ShootedActor, 20.f, HitDirection, HitResult, WeaponUser->GetInstigatorController(), this, DamageType);
 
 		}
 

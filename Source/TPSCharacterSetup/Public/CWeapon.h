@@ -7,6 +7,7 @@
 #include "CWeapon.generated.h"
 
 class USkeletalMeshComponet;
+class UDamageType;
 
 UCLASS()
 class TPSCHARACTERSETUP_API ACWeapon : public AActor
@@ -26,6 +27,10 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void Fire();
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Weapon")
+	TSubclassOf<UDamageType> DamageType;
+	
 
 public:	
 	// Called every frame
